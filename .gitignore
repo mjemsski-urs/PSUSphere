@@ -1,0 +1,23 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+
+# Virtual environment
+psusenv/
+env/
+venv/
+
+# Database
+db.sqlite3
+
+# VS Code
+.vscode/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Migrations (optional)
+**/migrations/*.py
+!**/migrations/__init__.py
