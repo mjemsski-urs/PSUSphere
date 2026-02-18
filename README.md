@@ -26,7 +26,10 @@ This project demonstrates the use of Django models, admin customization, and Fak
 4. Run migrations:
    python manage.py migrate
 
-5. Start the server:
+5. Create a superuser:
+   python manage.py createsuperuser
+
+6. Start the server:
    python manage.py runserver
 
 ## Authors
