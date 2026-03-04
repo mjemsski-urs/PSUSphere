@@ -1,21 +1,6 @@
 from django.contrib import admin
+
 from .models import College, Program, Organization, Student, OrgMember
-
-@admin.register(Student)
-class StudentAdmin(admin.ModelAdmin):
-    list_display = ("student_id", "lastname", "firstname", "middlename", "program")
-    search_fields = ("lastname", "firstname", "student_id")
-    list_filter = ("program",)
-
-@admin.register(OrgMember)
-class OrgMemberAdmin(admin.ModelAdmin):
-    list_display = ("student", "student_program", "organization", "date_joined")
-    search_fields = ("student__lastname", "student__firstname", "organization__name")
-    list_filter = ("organization", "date_joined")
-
-    def student_program(self, obj):
-        return obj.student.program
-    student_program.short_description = "Program"
 
 @admin.register(College)
 class CollegeAdmin(admin.ModelAdmin):
@@ -32,5 +17,23 @@ class ProgramAdmin(admin.ModelAdmin):
 @admin.register(Organization)
 class OrganizationAdmin(admin.ModelAdmin):
     list_display = ("name", "college", "description")
-    search_fields = ("name", "description")
+    search_fields = ("name", "description") 
     list_filter = ("college",)
+
+@admin.register(Student)
+class StudentAdmin(admin.ModelAdmin):
+    list_display = ("student_number", "lastname", "firstname", "middlename", "program")
+    search_fields = ("student_number", "lastname", "firstname")
+    list_filter = ("program", "program__college")
+
+@admin.register(OrgMember)
+class OrgMemberAdmin(admin.ModelAdmin):
+    list_display = ("student", "get_member_program", "organization", "date_joined",)
+    search_fields = ("student__lastname", "student__firstname",)
+
+    def get_member_program(self, obj):
+        try:
+            member = Student.objects.get(id=obj.student_id)
+            return member.program
+        except Student.DoesNotExist:
+            return None
