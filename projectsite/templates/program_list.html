@@ -12,13 +12,13 @@
           <br />
           <div class="col-md-12 row">
             <div class="col-md-6">
-              <form class="navbar-left navbar-form nav-search mr-md-3" action="">
-                <div class="input-group">
-                  <input type="text" placeholder="Search ..." class="form-control" />
-                  <div class="input-group-append">
-                    <span class="input-group-text"><i class="la la-search search-icon"></i></span>
+              <form class="navbar-left navbar-form nav-search mr-md-3" action="{% url 'program-list' %}" method="get">
+                  <div class="input-group">
+                      <input type="text" name="q" placeholder="Search ..." class="form-control" value="{{ request.GET.q }}">
+                      <div class="input-group-append">
+                          <span class="input-group-text"><i class="la la-search search-icon"></i></span>
+                      </div>
                   </div>
-                </div>
               </form>
             </div>
             <div class="col-md-6">
@@ -39,7 +39,7 @@
               <tbody>
               {% for object in object_list %}
               <tr>
-                <td>{{ object.prog_name }}</td>   <!-- Correct field name -->
+                <td>{{ object.prog_name }}</td> 
                 <td>{{ object.college }}</td>
                 <td>
                   <a href="{% url 'program-update' object.id %}">Edit</a>
