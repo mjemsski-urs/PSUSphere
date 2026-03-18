@@ -28,6 +28,22 @@
                 </div>
             </div>
             <div class="card-body">
+                <div class="col-md-12">
+                    <form method="get" class="row g-2 align-items-center">
+                    <div class="col-auto">
+                        <label for="memberSort" class="col-form-label">Sort by</label>
+                    </div>
+                    <div class="col-auto">
+                        <select class="form-control form-control-sm" id="memberSort" name="sort_by">
+                        <option value="student__lastname" {% if request.GET.sort_by == "student__lastname" %}selected{% endif %}>Member Last Name</option>
+                        <option value="date_joined" {% if request.GET.sort_by == "date_joined" %}selected{% endif %}>Date Joined</option>
+                        </select>
+                    </div>
+                    <div class="col-auto">
+                        <button type="submit" class="btn btn-primary btn-sm btn-rounded">Sort</button>
+                    </div>
+                    </form>
+                </div>
                 <table class="table table-striped mt-3">
                     <thead>
                         <tr>
