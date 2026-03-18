@@ -26,6 +26,23 @@
                 </div>
             </div>
             <div class="card-body">
+              <div class="col-md-12">
+                  <form method="get" class="row g-2 align-items-center">
+                    <div class="col-auto">
+                      <label for="studentSort" class="col-form-label">Sort by</label>
+                    </div>
+                    <div class="col-auto">
+                      <select class="form-control form-control-sm" id="studentSort" name="sort_by">
+                        <option value="lastname" {% if request.GET.sort_by == "lastname" %}selected{% endif %}>Last Name</option>
+                        <option value="firstname" {% if request.GET.sort_by == "firstname" %}selected{% endif %}>First Name</option>
+                        <option value="id" {% if request.GET.sort_by == "id" %}selected{% endif %}>Student ID</option>
+                      </select>
+                    </div>
+                    <div class="col-auto">
+                      <button type="submit" class="btn btn-primary btn-sm btn-rounded">Sort</button>
+                    </div>
+                  </form>
+                </div>
                 <table class="table table-striped mt-3">
                     <thead>
                         <tr>

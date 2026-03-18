@@ -1,16 +1,36 @@
 from django.shortcuts import render
-
 from django.views.generic.list import ListView
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from studentorg.models import Organization, OrgMember, Student, College, Program
 from studentorg.forms import OrganizationForm, OrgMemberForm, StudentForm, CollegeForm, ProgramForm
 from django.urls import reverse_lazy
 from django.db.models import Q
+from django.utils import timezone
 
 class HomePageView(ListView):
     model = Organization
     context_object_name = 'home'
     template_name = "home.html"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+
+        context["total_students"] = Student.objects.count()
+        context["total_programs"] = Program.objects.count()
+        context["total_colleges"] = College.objects.count()
+        context["total_organizations"] = Organization.objects.count()
+        context["total_members"] = OrgMember.objects.count()
+
+        today = timezone.now().date()
+        count = (
+            OrgMember.objects.filter(date_joined__year=today.year)
+            .values("student")
+            .distinct()
+            .count()
+        )
+        context["students_joined_this_year"] = count
+
+        return context
 
 class OrganizationList(ListView):
     model = Organization
@@ -28,6 +48,14 @@ class OrganizationList(ListView):
                 Q(description__icontains=query)
             )
         return qs
+    
+    def get_ordering(self):
+        allowed = ["college__college_name", "name"]
+        sort_by = self.request.GET.get("sort_by")
+        if sort_by in allowed:
+            return sort_by
+        return "college__college_name"
+
 
 class OrganizationCreateView(CreateView):
     model = Organization
@@ -63,6 +91,12 @@ class OrgMemberList(ListView):
                 Q(organization__name__icontains=query)
             )
         return qs
+    def get_ordering(self):
+        allowed = ["student__lastname", "date_joined"]
+        sort_by = self.request.GET.get("sort_by")
+        if sort_by in allowed:
+            return sort_by
+        return "student__lastname"
 
 class OrgMemberCreateView(CreateView):
     model = OrgMember
@@ -86,6 +120,7 @@ class StudentList(ListView):
     context_object_name = 'student'
     template_name = 'student_list.html'
     paginate_by = 5
+    ordering = ["lastname", "firstname"]
 
     def get_queryset(self):
         qs = super().get_queryset()
@@ -99,6 +134,13 @@ class StudentList(ListView):
                 Q(program__college__college_name__icontains=query)
             )
         return qs
+    
+    def get_ordering(self):
+        allowed = ["lastname", "firstname", "id"]
+        sort_by = self.request.GET.get("sort_by")
+        if sort_by in allowed:
+            return sort_by
+        return "lastname"
 
 class StudentCreateView(CreateView):
     model = Student
@@ -122,6 +164,7 @@ class CollegeList(ListView):
     context_object_name = 'college'
     template_name = 'college_list.html'
     paginate_by = 5
+    ordering = ["college_name"]
 
     def get_queryset(self):
         qs = super().get_queryset()
@@ -132,6 +175,12 @@ class CollegeList(ListView):
             )
         return qs
 
+def get_ordering(self):
+        allowed = ["college_name"]
+        sort_by = self.request.GET.get("sort_by")
+        if sort_by in allowed:
+            return sort_by
+        return "college_name"
 
 class CollegeCreateView(CreateView):
     model = College
@@ -155,6 +204,7 @@ class ProgramList(ListView):
     context_object_name = 'program'
     template_name = 'program_list.html'
     paginate_by = 5
+    ordering = ["college__college_name", "prog_name"]
 
     def get_queryset(self):
         qs = super().get_queryset()
@@ -166,6 +216,12 @@ class ProgramList(ListView):
             )
         return qs
 
+    def get_ordering(self):
+        allowed = ["prog_name", "college__college_name"]
+        sort_by = self.request.GET.get("sort_by")
+        if sort_by in allowed:
+            return sort_by
+        return "prog_name"
 
 class ProgramCreateView(CreateView):
     model = Program
