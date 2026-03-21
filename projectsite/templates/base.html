@@ -103,14 +103,28 @@
 							</ul>
 						</li>
 						<li class="nav-item dropdown">
-							<a class="dropdown-toggle profile-pic" data-toggle="dropdown" href="#" aria-expanded="false"> <img src="{% static 'img/profile.jpg' %}" alt="user-img" width="36" class="img-circle"> <span >Hizrian</span></span> </a>
+							<a class="dropdown-toggle profile-pic" data-toggle="dropdown" href="#" aria-expanded="false">
+							<img src="{% static 'img/profile.jpg' %}" alt="user-img" width="36" class="img-circle">
+							{% if request.user.is_authenticated %}
+								<span>{{ request.user.username }}</span>
+							{% else %}
+								<span>Guest</span>
+							{% endif %}
+							</a>
 							<ul class="dropdown-menu dropdown-user">
 								<li>
 									<div class="user-box">
 										<div class="u-img"><img src="{% static 'img/profile.jpg' %}" alt="user"></div>
 										<div class="u-text">
-											<h4>Hizrian</h4>
-											<p class="text-muted">hello@themekita.com</p><a href="profile.html" class="btn btn-rounded btn-danger btn-sm">View Profile</a></div>
+										{% if request.user.is_authenticated %}
+										<h4>{{ request.user.username }}</h4>
+										<p class="text-muted">{{ request.user.email }}</p>
+										{% else %}
+										<h4>Guest</h4>
+										{% endif %}
+										<a href="profile.html" class="btn btn-rounded btn-danger btn-sm">View Profile</a>
+										</div>
+
 										</div>
 									</li>
 									<div class="dropdown-divider"></div>
@@ -136,7 +150,7 @@
 						<div class="info">
 							<a class="" data-toggle="collapse" href="#collapseExample" aria-expanded="true">
 								<span>
-									Hizrian
+									{{ request.user.username }}
 									<span class="user-level">Administrator</span>
 									<span class="caret"></span>
 								</span>
