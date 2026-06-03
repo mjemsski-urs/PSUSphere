@@ -6,6 +6,7 @@ cryptography==46.0.5
 Django==6.0.2
 django-allauth==65.15.0
 django-widget-tweaks==1.5.1
+djangorestframework==3.17.1
 Faker==40.4.0
 idna==3.11
 pycparser==3.0
